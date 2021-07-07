@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EaseInOutUI : MonoBehaviour
 {
@@ -8,7 +9,9 @@ public class EaseInOutUI : MonoBehaviour
     private bool updateEaseOut = false;
     private float timer = 0.0f;
 
-    private Transform trans = null; 
+    private Transform trans = null;
+
+    private Text txt = null;
 
     [Header("Ease in")]
     public float inDuration = 2.0f;
@@ -24,16 +27,32 @@ public class EaseInOutUI : MonoBehaviour
     void Start()
     {
         trans = GetComponent<Transform>();
+
+        txt = GetComponent<Text>();
+
+        if (txt == null)
+        {
+            Debug.Log("Need to add Text component to: " + gameObject.name);
+            gameObject.SetActive(false);
+        }
     }
 
 
     void Update()
     {
-        if (updateEaseIn == true)
-            UpdateEaseIn();
+        if (timer >= 0)
+        {
+            if (updateEaseIn == true)
+                UpdateEaseIn();
 
-        if (updateEaseOut == true)
-            UpdateEaseOut();
+            if (updateEaseOut == true)
+                UpdateEaseOut();
+        }
+        else
+        {
+            updateEaseIn = false;
+            updateEaseOut = false;
+        }
     }
 
 
@@ -65,7 +84,7 @@ public class EaseInOutUI : MonoBehaviour
 
     public void UpdateEaseIn()
     {
-        Mathf.Lerp(0.0f, 255.0f, timer / inDuration);
+        txt.color = new Color(txt.color.r, txt.color.g, txt.color.b, Mathf.Lerp(1.0f, 0.0f, timer / inDuration));
 
         timer -= Time.deltaTime;
 
@@ -95,7 +114,7 @@ public class EaseInOutUI : MonoBehaviour
 
     public void UpdateEaseOut()
     {
-        Mathf.Lerp(255.0f, 0.0f, timer / outDuration);
+        Mathf.Lerp(0.0f, 1.0f, timer / outDuration);
 
         timer -= Time.deltaTime;
 
