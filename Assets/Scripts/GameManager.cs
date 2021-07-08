@@ -96,11 +96,24 @@ public class GameManager : MonoBehaviour
 
                 gameStateTimer = displayEaseInDuration;
             }
+            else
+                Debug.Log("Display value GO needs EaseInOutUI component");
         }
+        else
+            Debug.Log("Need to add displayValue to GameManager");
     }
 
 
     void Update()
+    {
+        gameStateTimer -= Time.deltaTime;
+
+        if (gameStateTimer <= 0)
+            ChangeState();
+    }
+
+
+    private void ChangeState()
     {
         switch (gameState)
         {
@@ -109,9 +122,21 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GAME_STATE.DISPLAY_VALUE_START:
+                gameState = GAME_STATE.DISPLAY_VALUE;
+
+                gameStateTimer = displayDuration;
                 break;
 
             case GAME_STATE.DISPLAY_VALUE:
+                gameState = GAME_STATE.DISPLAY_VALUE_END;
+
+                if (displayValueTransition != null)
+                {
+                    displayValueTransition.outDuration = displayEaseOutDuration;
+                    displayValueTransition.StartEaseOut();
+
+                    gameStateTimer = displayEaseInDuration;
+                }
                 break;
 
             case GAME_STATE.DISPLAY_VALUE_END:

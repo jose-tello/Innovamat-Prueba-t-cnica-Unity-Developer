@@ -114,7 +114,7 @@ public class EaseInOutUI : MonoBehaviour
 
     public void UpdateEaseOut()
     {
-        Mathf.Lerp(0.0f, 1.0f, timer / outDuration);
+        txt.color = new Color(txt.color.r, txt.color.g, txt.color.b, Mathf.Lerp(0.0f, 1.0f, timer / inDuration));
 
         timer -= Time.deltaTime;
 

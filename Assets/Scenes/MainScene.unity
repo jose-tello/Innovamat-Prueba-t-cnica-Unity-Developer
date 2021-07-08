@@ -383,6 +383,7 @@ RectTransform:
   m_Children:
   - {fileID: 659970647}
   - {fileID: 1056074821}
+  - {fileID: 767070053}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -414,15 +415,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 767070052}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 554.5, y: 359, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 50, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 580517258}
   - {fileID: 1403597917}
   - {fileID: 1789133093}
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 703055043}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -600,7 +601,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inDuration: 2
   inEndPosition: {x: 0, y: 0, z: 0}
-  inFade: 0
+  inFade: 1
   outDuration: 2
   outEndPosition: {x: 0, y: 0, z: 0}
   outFade: 0
@@ -693,10 +694,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77b8ae2204fd3284291ad47f25eb735f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  valuePrefab: {fileID: 0}
-  positionValue1: {fileID: 0}
-  positionValue2: {fileID: 0}
-  positionValue3: {fileID: 0}
+  displayValue: {fileID: 1056074820}
+  valuePrefab: {fileID: 3843427538392094622, guid: 420d1e1e7f9f9a34db9bf1abfc636c34,
+    type: 3}
+  positionValue1: {fileID: 580517257}
+  positionValue2: {fileID: 1403597916}
+  positionValue3: {fileID: 1789133092}
+  displayEaseInDuration: 2
+  displayDuration: 2
+  displayEaseOutDuration: 2
+  selectEaseInDuration: 2
+  selectEaseOutDuration: 2
 --- !u!4 &2140222620
 Transform:
   m_ObjectHideFlags: 0
