@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,8 +11,10 @@ public class GameManager : MonoBehaviour
     public GameObject displayValue = null;
 
     private EaseInOutUI displayValueTransition = null;
+    private Text displayValueText = null;
 
     //Ui select value
+    [Header("Value to select")]
     public GameObject valuePrefab = null;
 
     public GameObject positionValue1 = null;
@@ -25,6 +28,9 @@ public class GameManager : MonoBehaviour
     private EaseInOutUI valuePref1Transition = null;
     private EaseInOutUI valuePref2Transition = null;
     private EaseInOutUI valuePref3Transition = null;
+
+    public int smallestPossibleValue = 0;
+    public int biggestPossibleValue = 10;
 
     private int correctValue = 0;
     private int errorValue1 = 0;
@@ -82,25 +88,22 @@ public class GameManager : MonoBehaviour
         else
             Debug.Log("Need to add valuePrefab to GameManager");
 
-        gameState = GAME_STATE.DISPLAY_VALUE_START;
-        gameStateTimer = displayEaseInDuration;
 
         if (displayValue != null)
         {
             displayValueTransition = displayValue.GetComponent<EaseInOutUI>();
+            displayValueText = displayValue.GetComponent<Text>();
 
-            if (displayValueTransition != null)
-            {
-                displayValueTransition.inDuration = displayEaseInDuration;
-                displayValueTransition.StartEaseIn();
-
-                gameStateTimer = displayEaseInDuration;
-            }
-            else
+            if (displayValueTransition == null)
                 Debug.Log("Display value GO needs EaseInOutUI component");
+
+            if (displayValueText == null)
+                Debug.Log("Display value GO needs Text component");
         }
         else
             Debug.Log("Need to add displayValue to GameManager");
+
+        StartGame();
     }
 
 
@@ -158,8 +161,21 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void UpdateDisplayValueStart()
+    private void StartGame()
     {
+        gameState = GAME_STATE.DISPLAY_VALUE_START;
 
+        correctValue = Random.Range(smallestPossibleValue, biggestPossibleValue);
+
+        if (displayValueText != null)
+            displayValueText.text = correctValue.ToString();
+
+        if (displayValueTransition != null)
+        {
+            displayValueTransition.inDuration = displayEaseInDuration;
+            displayValueTransition.StartEaseIn();
+        }
+
+        gameStateTimer = displayEaseInDuration;
     }
 }
