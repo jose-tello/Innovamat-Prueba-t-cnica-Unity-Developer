@@ -29,12 +29,14 @@ public class GameManager : MonoBehaviour
     private EaseInOutUI valuePref2Transition = null;
     private EaseInOutUI valuePref3Transition = null;
 
+    private ValueToSelect valuePref1Script = null;
+    private ValueToSelect valuePref2Script = null;
+    private ValueToSelect valuePref3Script = null;
+
     public int smallestPossibleValue = 0;
     public int biggestPossibleValue = 10;
 
     private int correctValue = 0;
-    private int errorValue1 = 0;
-    private int errorValue2 = 0;
 
     //Game state
     enum GAME_STATE : int
@@ -80,6 +82,19 @@ public class GameManager : MonoBehaviour
             valuePref1Transition = valuePref1.GetComponent<EaseInOutUI>();
             valuePref2Transition = valuePref2.GetComponent<EaseInOutUI>();
             valuePref3Transition = valuePref3.GetComponent<EaseInOutUI>();
+
+            //Since they are instances of the same prefab, one check is enought
+            if (valuePref1Transition != null)
+            {
+                valuePref1Transition.inDuration = selectEaseInDuration;
+                valuePref1Transition.outDuration = selectEaseOutDuration;
+
+                valuePref2Transition.inDuration = selectEaseInDuration;
+                valuePref2Transition.outDuration = selectEaseOutDuration;
+           
+                valuePref3Transition.inDuration = selectEaseInDuration;
+                valuePref3Transition.outDuration = selectEaseOutDuration;
+            }
 
             valuePref1.SetActive(false);
             valuePref2.SetActive(false);
@@ -145,16 +160,25 @@ public class GameManager : MonoBehaviour
             case GAME_STATE.DISPLAY_VALUE_END:
                 gameState = GAME_STATE.SELECT_VALUE_START;
 
-                valuePref1.SetActive(true);
+                if (valuePref1 != null)
+                    valuePref1.SetActive(true);
 
+                if (valuePref2 != null)
+                    valuePref2.SetActive(true);
+
+                if (valuePref3 != null)
+                    valuePref3.SetActive(true);
+
+
+                //Since they are instances of the same prefab, one check is enought
                 if (valuePref1Transition != null)
                 {
-                    valuePref1Transition.inDuration = selectEaseInDuration;
                     valuePref1Transition.StartEaseIn();
-
-                    gameStateTimer = displayEaseInDuration;
+                    valuePref2Transition.StartEaseIn();
+                    valuePref3Transition.StartEaseIn();
                 }
 
+                gameStateTimer = displayEaseInDuration;
                 break;
 
             case GAME_STATE.SELECT_VALUE_START:
@@ -178,6 +202,19 @@ public class GameManager : MonoBehaviour
         gameState = GAME_STATE.DISPLAY_VALUE_START;
 
         correctValue = Random.Range(smallestPossibleValue, biggestPossibleValue);
+        int errorValue1 = Random.Range(smallestPossibleValue, biggestPossibleValue);
+        int errorValue2 = Random.Range(smallestPossibleValue, biggestPossibleValue);
+
+        if (errorValue1 == correctValue)
+            errorValue1 += 1;
+
+        if (errorValue2 == correctValue || errorValue2 == errorValue1)
+        {
+            errorValue2 += 1;
+
+            if (errorValue2 == correctValue || errorValue2 == errorValue1)
+                errorValue2 += 1;
+        }
 
         if (displayValueText != null)
             displayValueText.text = correctValue.ToString();
@@ -189,5 +226,11 @@ public class GameManager : MonoBehaviour
         }
 
         gameStateTimer = displayEaseInDuration;
+    }
+
+
+    public void ValueSelected(int val)
+    {
+        Debug.Log("Selected a value!");
     }
 }
