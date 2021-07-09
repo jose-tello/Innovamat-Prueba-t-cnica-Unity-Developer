@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 3843427538392094610}
   - component: {fileID: 3843427538392094611}
   - component: {fileID: 3843427538392094608}
+  - component: {fileID: 5100791245403876571}
   m_Layer: 5
   m_Name: ValueToSelect
   m_TagString: Untagged
@@ -222,3 +223,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textChildGO: {fileID: 3843427538023963174}
+--- !u!114 &5100791245403876571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3843427538392094622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb9f9f40f4e0ed4596326699bcca382, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inDuration: 2
+  inEndPosition: {x: 0, y: 0, z: 0}
+  inFade: 0
+  outDuration: 2
+  outEndPosition: {x: 0, y: 0, z: 0}
+  outFade: 0

@@ -5,13 +5,15 @@ using UnityEngine.UI;
 
 public class EaseInOutUI : MonoBehaviour
 {
+    private Transform trans = null;
+
+    private List<Text> textList = new List<Text>();
+    private List<Button> buttonList = new List<Button>();
+    private List<Image> imageList = new List<Image>();
+
     private bool updateEaseIn = false;
     private bool updateEaseOut = false;
     private float timer = 0.0f;
-
-    private Transform trans = null;
-
-    private Text txt = null;
 
     [Header("Ease in")]
     public float inDuration = 2.0f;
@@ -28,13 +30,33 @@ public class EaseInOutUI : MonoBehaviour
     {
         trans = GetComponent<Transform>();
 
-        txt = GetComponent<Text>();
+        Text txt = GetComponent<Text>();
+        Text[] textArray = GetComponentsInChildren<Text>(true);
+        
+        if (txt != null)
+            textList.Add(txt);
 
-        if (txt == null)
-        {
-            Debug.Log("Need to add Text component to: " + gameObject.name);
-            gameObject.SetActive(false);
-        }
+        for (int i = 0; i < textArray.Length; ++i)
+            textList.Add(textArray[i]);
+        
+
+        Button button = GetComponent<Button>();
+        Button[] buttonArray = GetComponentsInChildren<Button>(true);
+
+        if (button != null)
+            buttonList.Add(button);
+
+        for (int i = 0; i < buttonArray.Length; ++i)
+            buttonList.Add(buttonArray[i]);
+
+        Image img = GetComponent<Image>();
+        Image[] imageArray = GetComponentsInChildren<Image>(true);
+
+        if (img != null)
+            imageList.Add(img);
+
+        for (int i = 0; i < imageArray.Length; ++i)
+            imageList.Add(imageArray[i]);
     }
 
 
@@ -84,7 +106,12 @@ public class EaseInOutUI : MonoBehaviour
 
     public void UpdateEaseIn()
     {
-        txt.color = new Color(txt.color.r, txt.color.g, txt.color.b, Mathf.Lerp(1.0f, 0.0f, timer / inDuration));
+        for (int i = 0; i < textList.Count; ++i)
+            textList[i].color = new Color(textList[i].color.r, textList[i].color.g, textList[i].color.b, Mathf.Lerp(1.0f, 0.0f, timer / inDuration));
+
+        for (int i = 0; i < imageList.Count; ++i)
+            imageList[i].color = new Color(imageList[i].color.r, imageList[i].color.g, imageList[i].color.b, Mathf.Lerp(1.0f, 0.0f, timer / inDuration));
+        
 
         timer -= Time.deltaTime;
 
@@ -114,7 +141,11 @@ public class EaseInOutUI : MonoBehaviour
 
     public void UpdateEaseOut()
     {
-        txt.color = new Color(txt.color.r, txt.color.g, txt.color.b, Mathf.Lerp(0.0f, 1.0f, timer / inDuration));
+        for (int i = 0; i < textList.Count; ++i)
+            textList[i].color = new Color(textList[i].color.r, textList[i].color.g, textList[i].color.b, Mathf.Lerp(0.0f, 1.0f, timer / inDuration));
+
+        for (int i = 0; i < imageList.Count; ++i)
+            imageList[i].color = new Color(imageList[i].color.r, imageList[i].color.g, imageList[i].color.b, Mathf.Lerp(0.0f, 1.0f, timer / inDuration));
 
         timer -= Time.deltaTime;
 

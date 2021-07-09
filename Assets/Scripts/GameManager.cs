@@ -143,6 +143,18 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GAME_STATE.DISPLAY_VALUE_END:
+                gameState = GAME_STATE.SELECT_VALUE_START;
+
+                valuePref1.SetActive(true);
+
+                if (valuePref1Transition != null)
+                {
+                    valuePref1Transition.inDuration = selectEaseInDuration;
+                    valuePref1Transition.StartEaseIn();
+
+                    gameStateTimer = displayEaseInDuration;
+                }
+
                 break;
 
             case GAME_STATE.SELECT_VALUE_START:
