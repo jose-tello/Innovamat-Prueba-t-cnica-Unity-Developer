@@ -66,6 +66,10 @@ public class GameManager : MonoBehaviour
 
     private GAME_STATE gameState = GAME_STATE.ERROR_STATE;
 
+    //Game statistics
+    [HideInInspector] public int victoryCount = 0;
+    [HideInInspector] public int defeatCount = 0;
+
 
     void Start()
     {
@@ -180,6 +184,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GAME_STATE.SELECT_VALUE_START:
+                gameState = GAME_STATE.SELECT_VALUE;
                 break;
 
             case GAME_STATE.SELECT_VALUE:
@@ -297,6 +302,20 @@ public class GameManager : MonoBehaviour
 
     public void ValueSelected(int val)
     {
-        Debug.Log("Selected a value!");
+        if (val == correctValue)
+        {
+            victoryCount++;
+
+            //Start transition
+        }
+
+        else
+        {
+            defeatCount++;
+
+            //Start transition
+        }
+
+        ChangeState();
     }
 }
