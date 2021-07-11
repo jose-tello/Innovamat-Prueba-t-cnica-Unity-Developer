@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class EaseInOutUI : MonoBehaviour
 {
-    private bool started = false; //Since at the moment of creation the game object is deactivated, when used the script calls Start() one frame later.
-
     private Transform trans = null;
 
     private List<Text> textList = new List<Text>();
@@ -28,8 +26,7 @@ public class EaseInOutUI : MonoBehaviour
     public bool outFade = false;
 
 
-    //Since at the moment of creation the game object is deactivated, when used the script calls Start() one frame later.
-    private void StartScript()
+    private void Start()
     {
         trans = GetComponent<Transform>();
 
@@ -61,7 +58,7 @@ public class EaseInOutUI : MonoBehaviour
         for (int i = 0; i < imageArray.Length; ++i)
             imageList.Add(imageArray[i]);
 
-        started = true;
+        MakeTransparent();
     }
 
 
@@ -76,16 +73,26 @@ public class EaseInOutUI : MonoBehaviour
                 UpdateEaseOut();
         }
 
-        else if (timer < 0 && (updateEaseIn == true || updateEaseOut == true))
+        else if (timer < 0 && updateEaseIn == true)
         {
             updateEaseIn = false;
-            updateEaseOut = false;
 
             for (int i = 0; i < buttonList.Count; ++i)
                 buttonList[i].interactable = true;
         }
+
+        else if (timer < 0 && updateEaseOut == true)
+            updateEaseOut = false;
     }
 
+    public void MakeTransparent()
+    {
+        for (int i = 0; i < textList.Count; ++i)
+            textList[i].color = new Color(textList[i].color.r, textList[i].color.g, textList[i].color.b, 0.0f);
+
+        for (int i = 0; i < imageList.Count; ++i)
+            imageList[i].color = new Color(imageList[i].color.r, imageList[i].color.g, imageList[i].color.b, 0.0f);
+    }
 
     public void SetPosition(Vector3 pos)
     {
@@ -102,9 +109,6 @@ public class EaseInOutUI : MonoBehaviour
 
     public void StartEaseIn()
     {
-        if (started == false)
-            StartScript();
-
         if (updateEaseOut == true)
         {
             Debug.Log("Trying to start ease in while updating ease out");
@@ -149,9 +153,6 @@ public class EaseInOutUI : MonoBehaviour
 
     public void StartEaseOut()
     {
-        if (started == false)
-            StartScript();
-
         if (updateEaseIn == true)
         {
             Debug.Log("Trying to start ease out while updating ease in");

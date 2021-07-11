@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager gameManager = null;
+    private bool started = false;
 
     //Ui value display
     public GameObject displayValue = null;
@@ -83,22 +84,25 @@ public class GameManager : MonoBehaviour
             valuePref2Transition = valuePref2.GetComponent<EaseInOutUI>();
             valuePref3Transition = valuePref3.GetComponent<EaseInOutUI>();
 
+            valuePref1Script = valuePref1.GetComponent<ValueToSelect>();
+            valuePref2Script = valuePref2.GetComponent<ValueToSelect>();
+            valuePref3Script = valuePref3.GetComponent<ValueToSelect>();
+
             //Since they are instances of the same prefab, one check is enought
             if (valuePref1Transition != null)
             {
                 valuePref1Transition.inDuration = selectEaseInDuration;
                 valuePref1Transition.outDuration = selectEaseOutDuration;
+                valuePref1Transition.MakeTransparent();
 
                 valuePref2Transition.inDuration = selectEaseInDuration;
                 valuePref2Transition.outDuration = selectEaseOutDuration;
-           
+                valuePref2Transition.MakeTransparent();
+
                 valuePref3Transition.inDuration = selectEaseInDuration;
                 valuePref3Transition.outDuration = selectEaseOutDuration;
+                valuePref3Transition.MakeTransparent();
             }
-
-            valuePref1.SetActive(false);
-            valuePref2.SetActive(false);
-            valuePref3.SetActive(false);
         }
         else
             Debug.Log("Need to add valuePrefab to GameManager");
@@ -117,13 +121,17 @@ public class GameManager : MonoBehaviour
         }
         else
             Debug.Log("Need to add displayValue to GameManager");
-
-        StartGame();
     }
 
 
     void Update()
     {
+        if (started == false)
+        {
+            StartGame();
+            started = true;
+        }
+
         gameStateTimer -= Time.deltaTime;
 
         if (gameStateTimer <= 0)
@@ -160,16 +168,6 @@ public class GameManager : MonoBehaviour
             case GAME_STATE.DISPLAY_VALUE_END:
                 gameState = GAME_STATE.SELECT_VALUE_START;
 
-                if (valuePref1 != null)
-                    valuePref1.SetActive(true);
-
-                if (valuePref2 != null)
-                    valuePref2.SetActive(true);
-
-                if (valuePref3 != null)
-                    valuePref3.SetActive(true);
-
-
                 //Since they are instances of the same prefab, one check is enought
                 if (valuePref1Transition != null)
                 {
@@ -201,6 +199,15 @@ public class GameManager : MonoBehaviour
     {
         gameState = GAME_STATE.DISPLAY_VALUE_START;
 
+        SetValuesToPrefabs();
+
+        gameStateTimer = displayEaseInDuration;
+    }
+
+
+    private void SetValuesToPrefabs()
+    {
+        //Calculate possible values
         correctValue = Random.Range(smallestPossibleValue, biggestPossibleValue);
         int errorValue1 = Random.Range(smallestPossibleValue, biggestPossibleValue);
         int errorValue2 = Random.Range(smallestPossibleValue, biggestPossibleValue);
@@ -216,6 +223,7 @@ public class GameManager : MonoBehaviour
                 errorValue2 += 1;
         }
 
+        //Display text
         if (displayValueText != null)
             displayValueText.text = correctValue.ToString();
 
@@ -225,9 +233,67 @@ public class GameManager : MonoBehaviour
             displayValueTransition.StartEaseIn();
         }
 
-        gameStateTimer = displayEaseInDuration;
-    }
+        #region SET_VALUE_POSITION
+        //Random values
+        if (valuePref1Script != null)
+        {
+            float corValPos = Random.Range(0.0f, 1.0f);
+            float errValPos1 = Random.Range(0.0f, 1.0f);
+            float errValPos2 = Random.Range(0.0f, 1.0f);
 
+            if (corValPos > errValPos1 && corValPos > errValPos2)
+            {
+                valuePref1Script.SetValue(correctValue);
+
+                if (errValPos1 > errValPos2)
+                {
+                    valuePref2Script.SetValue(errorValue1);
+                    valuePref3Script.SetValue(errorValue2);
+                }
+
+                else
+                {
+                    valuePref2Script.SetValue(errorValue2);
+                    valuePref3Script.SetValue(errorValue1);
+                }
+            }
+
+            else if (errValPos1 > correctValue && errValPos1 > errValPos2)
+            {
+                valuePref1Script.SetValue(errorValue1);
+
+                if (correctValue > errValPos2)
+                {
+                    valuePref2Script.SetValue(correctValue);
+                    valuePref3Script.SetValue(errorValue2);
+                }
+
+                else
+                {
+                    valuePref2Script.SetValue(errorValue2);
+                    valuePref3Script.SetValue(correctValue);
+                }
+            }
+
+            else
+            {
+                valuePref1Script.SetValue(errorValue2);
+
+                if (correctValue > errValPos1)
+                {
+                    valuePref2Script.SetValue(correctValue);
+                    valuePref3Script.SetValue(errorValue1);
+                }
+
+                else
+                {
+                    valuePref2Script.SetValue(errorValue1);
+                    valuePref3Script.SetValue(correctValue);
+                }
+            }
+        }
+        #endregion
+    }
 
     public void ValueSelected(int val)
     {

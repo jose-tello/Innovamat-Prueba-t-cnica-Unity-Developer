@@ -38,18 +38,15 @@ public class ValueToSelect : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void ValueSelected()
     {
-
-            Int32.TryParse(txt.text, out int value);
-            GameManager.gameManager.ValueSelected(value);
-        
+        Int32.TryParse(txt.text, out int value);
+        GameManager.gameManager.ValueSelected(value);
     }
 
+    public void SetValue(int value)
+    {
+        if (txt != null)
+            txt.text = value.ToString();
+    }
 }
