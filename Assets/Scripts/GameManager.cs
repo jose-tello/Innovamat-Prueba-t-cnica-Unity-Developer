@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     public int biggestPossibleValue = 10;
 
     private int correctValue = 0;
+    private int lastValueClicked = 0;
 
     //Game state
     enum GAME_STATE : int
@@ -234,9 +235,19 @@ public class GameManager : MonoBehaviour
             case GAME_STATE.CORRECT_VALUE_SELECTED:
                 gameState = GAME_STATE.SELECT_VALUE_END;
 
-                gameStateTimer = colorTransitionDuration;
+                if (valuePref1ColorChange != null && valuePref1Script != null)
+                {
+                    if (valuePref1Script.GetValue() == lastValueClicked)
+                        valuePref1ColorChange.StartTransition(0);
 
-                valuePref1ColorChange.StartTransition(0);
+                    else if (valuePref2Script.GetValue() == lastValueClicked)
+                        valuePref2ColorChange.StartTransition(0);
+
+                    else
+                        valuePref3ColorChange.StartTransition(0);
+                }
+
+                gameStateTimer = colorTransitionDuration;
                 break;
 
 
@@ -244,19 +255,42 @@ public class GameManager : MonoBehaviour
             case GAME_STATE.INCORRECT_VALUE_SELECTED:
                 gameState = GAME_STATE.SELECT_VALUE;
 
-                valuePref1ColorChange.StartTransition(1);
+                if (valuePref1ColorChange != null && valuePref1Script != null)
+                {
+                    if (valuePref1Script.GetValue() == lastValueClicked)
+                        valuePref1ColorChange.StartTransition(1);
 
+                    else if (valuePref2Script.GetValue() == lastValueClicked)
+                        valuePref2ColorChange.StartTransition(1);
+
+                    else
+                        valuePref3ColorChange.StartTransition(1);
+                }
                 gameStateTimer = colorTransitionDuration;
                 break;
 
             case GAME_STATE.LOSE_GAME_START:
                 gameState = GAME_STATE.LOSE_GAME_END;
 
-                if (valuePref1ColorChange != null)
+                if (valuePref1ColorChange != null && valuePref1Script != null)
                 {
-                    valuePref1ColorChange.StartTransition(1);
-                    valuePref2ColorChange.StartTransition(1);
-                    valuePref3ColorChange.StartTransition(1);
+                    if (valuePref1Script.GetValue() == lastValueClicked)
+                        valuePref1ColorChange.StartTransition(1);
+
+                    else if (valuePref2Script.GetValue() == lastValueClicked)
+                        valuePref2ColorChange.StartTransition(1);
+
+                    else
+                        valuePref3ColorChange.StartTransition(1);
+
+                    if (valuePref1Script.GetValue() == correctValue)
+                        valuePref1ColorChange.StartTransition(0);
+
+                    else if (valuePref2Script.GetValue() == correctValue)
+                        valuePref2ColorChange.StartTransition(0);
+
+                    else
+                        valuePref3ColorChange.StartTransition(0);
                 }
 
                 gameStateTimer = colorTransitionDuration;
@@ -391,12 +425,13 @@ public class GameManager : MonoBehaviour
 
     public void ValueSelected(int val)
     {
+        lastValueClicked = val;
+
         if (val == correctValue)
         {
             victoryCount++;
 
             gameState = GAME_STATE.CORRECT_VALUE_SELECTED;
-            //Start transition
         }
 
         else
@@ -411,7 +446,6 @@ public class GameManager : MonoBehaviour
 
             else
                 gameState = GAME_STATE.INCORRECT_VALUE_SELECTED;
-            //Start transition
         }
 
         ChangeState();

@@ -49,4 +49,10 @@ public class ValueToSelect : MonoBehaviour
         if (txt != null)
             txt.text = value.ToString();
     }
+
+    public int GetValue()
+    {
+        Int32.TryParse(txt.text, out int value);
+        return value;
+    }
 }
