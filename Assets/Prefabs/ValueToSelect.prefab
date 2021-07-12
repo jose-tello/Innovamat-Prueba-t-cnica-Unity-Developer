@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 3843427538392094611}
   - component: {fileID: 3843427538392094608}
   - component: {fileID: 5100791245403876571}
+  - component: {fileID: 8986180628013334095}
   m_Layer: 5
   m_Name: ValueToSelect
   m_TagString: Untagged
@@ -241,3 +242,19 @@ MonoBehaviour:
   outDuration: 2
   outEndPosition: {x: 0, y: 0, z: 0}
   outFade: 0
+--- !u!114 &8986180628013334095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3843427538392094622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eba26130d0a167341aa6b7febed6c60c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorTransitions:
+  - {r: 0.09211465, g: 0.8490566, b: 0.15911937, a: 0}
+  - {r: 0.8301887, g: 0, b: 0, a: 0}
+  transitionDuration: 1

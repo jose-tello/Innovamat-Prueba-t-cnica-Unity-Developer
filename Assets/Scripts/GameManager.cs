@@ -30,6 +30,10 @@ public class GameManager : MonoBehaviour
     private EaseInOutUI valuePref2Transition = null;
     private EaseInOutUI valuePref3Transition = null;
 
+    private TextColorTransition valuePref1ColorChange = null;
+    private TextColorTransition valuePref2ColorChange = null;
+    private TextColorTransition valuePref3ColorChange = null;
+
     private ValueToSelect valuePref1Script = null;
     private ValueToSelect valuePref2Script = null;
     private ValueToSelect valuePref3Script = null;
@@ -50,10 +54,21 @@ public class GameManager : MonoBehaviour
 
         SELECT_VALUE_START,
         SELECT_VALUE,
-        SELECT_VALUE_END,
+
+        CORRECT_VALUE_SELECTED_START,
+        CORRECT_VALUE_SELECTED_END,
+        
+        INCORRECT_VALUE_SELECTED_START,
+        INCORRECT_VALUE_SELECTED_END,
+
+        LOSE_GAME,
+        GAME_END,
 
         MAX
     }
+
+    public int maxErrorsPerRound = 2;
+    private int errorsThisRound = 0;
 
     public float displayEaseInDuration = 2.0f;
     public float displayDuration = 2.0f;
@@ -61,6 +76,8 @@ public class GameManager : MonoBehaviour
 
     public float selectEaseInDuration = 2.0f;
     public float selectEaseOutDuration = 2.0f;
+
+    public float colorTransitionDuration = 1.0f;
 
     private float gameStateTimer = 0.0f;
 
@@ -92,6 +109,10 @@ public class GameManager : MonoBehaviour
             valuePref2Script = valuePref2.GetComponent<ValueToSelect>();
             valuePref3Script = valuePref3.GetComponent<ValueToSelect>();
 
+            valuePref1ColorChange = valuePref1.GetComponent<TextColorTransition>();
+            valuePref2ColorChange = valuePref2.GetComponent<TextColorTransition>();
+            valuePref3ColorChange = valuePref3.GetComponent<TextColorTransition>();
+
             //Since they are instances of the same prefab, one check is enought
             if (valuePref1Transition != null)
             {
@@ -106,6 +127,13 @@ public class GameManager : MonoBehaviour
                 valuePref3Transition.inDuration = selectEaseInDuration;
                 valuePref3Transition.outDuration = selectEaseOutDuration;
                 valuePref3Transition.MakeTransparent();
+            }
+
+            if (valuePref1ColorChange != null)
+            {
+                valuePref1ColorChange.transitionDuration = colorTransitionDuration;
+                valuePref2ColorChange.transitionDuration = colorTransitionDuration;
+                valuePref3ColorChange.transitionDuration = colorTransitionDuration;
             }
         }
         else
@@ -190,7 +218,40 @@ public class GameManager : MonoBehaviour
             case GAME_STATE.SELECT_VALUE:
                 break;
 
-            case GAME_STATE.SELECT_VALUE_END:
+            case GAME_STATE.CORRECT_VALUE_SELECTED_START:
+                gameState = GAME_STATE.CORRECT_VALUE_SELECTED_END;
+
+                gameStateTimer = displayEaseInDuration;
+
+                valuePref1ColorChange.StartTransition(0);
+                break;
+
+            case GAME_STATE.CORRECT_VALUE_SELECTED_END:
+                gameState = GAME_STATE.GAME_END;
+
+                //Since they are instances of the same prefab, one check is enought
+                if (valuePref1Transition != null)
+                {
+                    valuePref1Transition.StartEaseOut();
+                    valuePref2Transition.StartEaseOut();
+                    valuePref3Transition.StartEaseOut();
+                }
+
+                gameStateTimer = displayEaseOutDuration;
+                break;
+
+            case GAME_STATE.INCORRECT_VALUE_SELECTED_START:
+                gameState = GAME_STATE.INCORRECT_VALUE_SELECTED_END;
+
+                gameStateTimer = displayEaseInDuration;
+
+                valuePref1ColorChange.StartTransition(1);
+                break;
+
+
+
+            case GAME_STATE.GAME_END:
+                StartGame();
                 break;
 
             default:
@@ -206,6 +267,7 @@ public class GameManager : MonoBehaviour
 
         SetValuesToPrefabs();
 
+        errorsThisRound = 0;
         gameStateTimer = displayEaseInDuration;
     }
 
@@ -306,6 +368,7 @@ public class GameManager : MonoBehaviour
         {
             victoryCount++;
 
+            gameState = GAME_STATE.CORRECT_VALUE_SELECTED_START;
             //Start transition
         }
 
@@ -313,6 +376,7 @@ public class GameManager : MonoBehaviour
         {
             defeatCount++;
 
+            gameState = GAME_STATE.INCORRECT_VALUE_SELECTED_START;
             //Start transition
         }
 
