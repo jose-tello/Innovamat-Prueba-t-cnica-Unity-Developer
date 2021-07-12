@@ -139,8 +139,6 @@ public class EaseInOutUI : MonoBehaviour
         
 
         timer -= Time.deltaTime;
-
-        //Move stuff
     }
     #endregion
 
@@ -182,8 +180,6 @@ public class EaseInOutUI : MonoBehaviour
             imageList[i].color = new Color(imageList[i].color.r, imageList[i].color.g, imageList[i].color.b, Mathf.Lerp(0.0f, 1.0f, timer / inDuration));
 
         timer -= Time.deltaTime;
-
-        //Move stuff
     }
     #endregion
 }

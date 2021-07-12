@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class TextColorTransition : MonoBehaviour
 {
     public List<Color> colorTransitions = new List<Color>();
-    private Color currentTransition;
+    private Color currentTransition = new Color(0.0f, 0.0f, 0.0f);
 
     public float transitionDuration = 1.0f;
     private float transitionTimer = 0.0f;

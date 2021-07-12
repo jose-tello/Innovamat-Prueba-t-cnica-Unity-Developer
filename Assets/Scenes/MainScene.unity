@@ -886,11 +886,13 @@ MonoBehaviour:
   positionValue3: {fileID: 1789133092}
   smallestPossibleValue: 0
   biggestPossibleValue: 10
+  maxErrorsPerRound: 2
   displayEaseInDuration: 2
   displayDuration: 2
   displayEaseOutDuration: 2
   selectEaseInDuration: 2
   selectEaseOutDuration: 2
+  colorTransitionDuration: 0.7
   victoryCount: 0
   defeatCount: 0
 --- !u!4 &2140222620
