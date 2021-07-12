@@ -353,7 +353,7 @@ public class GameManager : MonoBehaviour
 
         //Display text
         if (displayValueText != null)
-            displayValueText.text = correctValue.ToString();
+            displayValueText.text = NumberTable.numberTranslateTable.GetNumberStr(correctValue);
 
         if (displayValueTransition != null)
         {

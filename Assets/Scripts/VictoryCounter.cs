@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class VictoryCounter : MonoBehaviour
 {
     private Text textComponent = null;
-    // Start is called before the first frame update
     void Start()
     {
         textComponent = GetComponent<Text>();
@@ -18,7 +17,6 @@ public class VictoryCounter : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         textComponent.text = "Victories: " + GameManager.gameManager.victoryCount.ToString();

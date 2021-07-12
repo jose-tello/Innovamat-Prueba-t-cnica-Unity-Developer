@@ -17,7 +17,6 @@ public class TextColorTransition : MonoBehaviour
     private bool transitionToColor = false;
     private bool transitionToOriginal = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         Text text = GetComponent<Text>();
@@ -37,7 +36,6 @@ public class TextColorTransition : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (transitionTimer >= 0.0f)
