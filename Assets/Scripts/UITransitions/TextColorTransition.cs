@@ -40,7 +40,7 @@ public class TextColorTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transitionTimer > 0.0f)
+        if (transitionTimer >= 0.0f)
         {
             if (transitionToColor == true)
                 TransitionToColor();

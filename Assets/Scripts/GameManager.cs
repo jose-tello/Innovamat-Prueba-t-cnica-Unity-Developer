@@ -54,14 +54,13 @@ public class GameManager : MonoBehaviour
 
         SELECT_VALUE_START,
         SELECT_VALUE,
+        SELECT_VALUE_END,
 
-        CORRECT_VALUE_SELECTED_START,
-        CORRECT_VALUE_SELECTED_END,
-        
-        INCORRECT_VALUE_SELECTED_START,
-        INCORRECT_VALUE_SELECTED_END,
+        CORRECT_VALUE_SELECTED,
+        INCORRECT_VALUE_SELECTED,
 
-        LOSE_GAME,
+        LOSE_GAME_START,
+        LOSE_GAME_END,
         GAME_END,
 
         MAX
@@ -218,15 +217,7 @@ public class GameManager : MonoBehaviour
             case GAME_STATE.SELECT_VALUE:
                 break;
 
-            case GAME_STATE.CORRECT_VALUE_SELECTED_START:
-                gameState = GAME_STATE.CORRECT_VALUE_SELECTED_END;
-
-                gameStateTimer = displayEaseInDuration;
-
-                valuePref1ColorChange.StartTransition(0);
-                break;
-
-            case GAME_STATE.CORRECT_VALUE_SELECTED_END:
+            case GAME_STATE.SELECT_VALUE_END:
                 gameState = GAME_STATE.GAME_END;
 
                 //Since they are instances of the same prefab, one check is enought
@@ -240,15 +231,51 @@ public class GameManager : MonoBehaviour
                 gameStateTimer = displayEaseOutDuration;
                 break;
 
-            case GAME_STATE.INCORRECT_VALUE_SELECTED_START:
-                gameState = GAME_STATE.INCORRECT_VALUE_SELECTED_END;
+            case GAME_STATE.CORRECT_VALUE_SELECTED:
+                gameState = GAME_STATE.SELECT_VALUE_END;
 
-                gameStateTimer = displayEaseInDuration;
+                gameStateTimer = colorTransitionDuration;
 
-                valuePref1ColorChange.StartTransition(1);
+                valuePref1ColorChange.StartTransition(0);
                 break;
 
 
+
+            case GAME_STATE.INCORRECT_VALUE_SELECTED:
+                gameState = GAME_STATE.SELECT_VALUE;
+
+                valuePref1ColorChange.StartTransition(1);
+
+                gameStateTimer = colorTransitionDuration;
+                break;
+
+            case GAME_STATE.LOSE_GAME_START:
+                gameState = GAME_STATE.LOSE_GAME_END;
+
+                if (valuePref1ColorChange != null)
+                {
+                    valuePref1ColorChange.StartTransition(1);
+                    valuePref2ColorChange.StartTransition(1);
+                    valuePref3ColorChange.StartTransition(1);
+                }
+
+                gameStateTimer = colorTransitionDuration;
+
+                break;
+
+            case GAME_STATE.LOSE_GAME_END:
+                gameState = GAME_STATE.GAME_END;
+
+                //Since they are instances of the same prefab, one check is enought
+                if (valuePref1Transition != null)
+                {
+                    valuePref1Transition.StartEaseOut();
+                    valuePref2Transition.StartEaseOut();
+                    valuePref3Transition.StartEaseOut();
+                }
+
+                gameStateTimer = displayEaseOutDuration;
+                break;
 
             case GAME_STATE.GAME_END:
                 StartGame();
@@ -368,15 +395,22 @@ public class GameManager : MonoBehaviour
         {
             victoryCount++;
 
-            gameState = GAME_STATE.CORRECT_VALUE_SELECTED_START;
+            gameState = GAME_STATE.CORRECT_VALUE_SELECTED;
             //Start transition
         }
 
         else
         {
-            defeatCount++;
+            errorsThisRound++;
 
-            gameState = GAME_STATE.INCORRECT_VALUE_SELECTED_START;
+            if (errorsThisRound == maxErrorsPerRound)
+            {
+                gameState = GAME_STATE.LOSE_GAME_START;
+                defeatCount++;
+            }
+
+            else
+                gameState = GAME_STATE.INCORRECT_VALUE_SELECTED;
             //Start transition
         }
 
